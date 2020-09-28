@@ -1,0 +1,27 @@
+neotype
+=======
+
+Tired of needing to go to a website powered by bloated JavaScript just to do a typing test?
+
+Fear no more, for neotype is here! It runs in your UNIX terminal and is powered by classic ANSI escape codes!
+
+Installation
+============
+
+$ git clone https://github.com/tteeoo/neotype
+$ cd neotype
+$ mkdir -p ~/.local/share/neotype && cp share/* ~/.local/share/neotype
+$ go build
+# cp neotype /usr/local/bin
+
+The above commands will compile neotype, although a pre-compiled binary is also provided on the releases page.
+
+Usage
+=====
+
+License
+=======
+
+The glorious Unlicense!
+
+In other words, this software is dedicated to the public domain.
