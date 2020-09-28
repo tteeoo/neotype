@@ -14,7 +14,7 @@ $ mkdir -p ~/.local/share/neotype && cp share/* ~/.local/share/neotype
 $ go build
 # cp neotype /usr/local/bin
 
-The above commands will compile neotype, although a pre-compiled binary is also provided on the releases page.
+Note: the above commands will compile neotype, but a pre-compiled binary is also provided on the releases page.
 
 Usage
 =====
