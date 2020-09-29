@@ -16,6 +16,11 @@ import (
 
 func main() {
 
+	// Default config
+	config := util.Config{
+		Words: 12,
+	}
+
 	// Handle command-line arguments
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
@@ -31,11 +36,6 @@ func main() {
 	// Get data directory
 	shareDir, err := util.ResolveShare()
 	util.DieIf(err, "neotype: error: %s\n", err)
-
-	// Default config
-	config := util.Config{
-		Words: 12,
-	}
 
 	// Get config file
 	configFile, err := util.ResolveConfig()
