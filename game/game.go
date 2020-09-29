@@ -56,7 +56,7 @@ func (g *Game) Start() error {
 			// Get current time
 			g.TotalTime = time.Now().Sub(g.StartTime)
 			// Check for finish
-			if g.Index == len(g.WordString) {
+			if g.Index == len(g.WordString) - 1 {
 				break
 			}
 		}
