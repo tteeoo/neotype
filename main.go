@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"io/ioutil"
-	"os/exec"
-	"time"
-	"strings"
-	"math/rand"
-	"os/signal"
-	"golang.org/x/crypto/ssh/terminal"
-	"github.com/tteeoo/neotype/util"
 	"github.com/tteeoo/neotype/game"
+	"github.com/tteeoo/neotype/util"
+	"golang.org/x/crypto/ssh/terminal"
+	"io/ioutil"
+	"math/rand"
+	"os"
+	"os/exec"
+	"os/signal"
+	"strings"
+	"time"
 )
 
 func main() {
@@ -46,17 +46,17 @@ func main() {
 		chosen = append(chosen, dictionary[rand.Intn(len(dictionary))])
 	}
 
-	// Declare Game 
+	// Declare Game
 	g := game.Game{
 		WordString: strings.Join(chosen, " "),
-		Width: w,
-		Line: 1,
+		Width:      w,
+		Line:       1,
 	}
 
 	// Handle Ctrl+C
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
-	go func(){
+	go func() {
 		for range c {
 			fmt.Print("\033[H\033[2J")
 			fmt.Print("\033[?1049l")

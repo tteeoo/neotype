@@ -1,9 +1,9 @@
 package util
 
 import (
-	"os"
-	"fmt"
 	"errors"
+	"fmt"
+	"os"
 	"os/user"
 )
 
@@ -35,10 +35,10 @@ func ResolveShare() (string, error) {
 	if os.IsNotExist(err) {
 		err = os.Mkdir(share, 0755)
 		if err != nil {
-			return "", errors.New("cannot create neotype data directory \""+share+"\": " + err.Error())
+			return "", errors.New("cannot create neotype data directory \"" + share + "\": " + err.Error())
 		}
 	} else if err != nil {
-		return "", errors.New("cannot access neotype data directory \""+share+"\": " + err.Error())
+		return "", errors.New("cannot access neotype data directory \"" + share + "\": " + err.Error())
 	}
 	return share, nil
 }

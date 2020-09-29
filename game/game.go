@@ -1,24 +1,24 @@
 package game
 
 import (
-	"fmt"
-	"time"
-	"os/exec"
-	"os"
 	"errors"
+	"fmt"
 	"math"
+	"os"
+	"os/exec"
+	"time"
 )
 
 // Game represents the current game state.
 type Game struct {
-	Started bool
-	StartTime time.Time
-	TotalTime time.Duration
+	Started    bool
+	StartTime  time.Time
+	TotalTime  time.Duration
 	WordString string
-	Width int
+	Width      int
 
-	Line int
-	Index int
+	Line       int
+	Index      int
 	TotalTyped int
 	TotalWrong int
 }
@@ -30,7 +30,7 @@ func (g *Game) Start() error {
 	fmt.Print("\033[?1049h")
 	fmt.Print("\033[H\033[2J")
 	fmt.Println(g.WordString)
-	fmt.Printf("\033[%dA", int(len(g.WordString) / g.Width) + 1)
+	fmt.Printf("\033[%dA", int(len(g.WordString)/g.Width)+1)
 	fmt.Printf("\033[%dD", g.Width)
 
 	// Main loop
@@ -52,11 +52,11 @@ func (g *Game) Start() error {
 		if !g.Started {
 			g.StartTime = time.Now()
 			g.Started = true
-		} else  {
+		} else {
 			// Get current time
 			g.TotalTime = time.Now().Sub(g.StartTime)
 			// Check for finish
-			if g.Index == len(g.WordString) - 1 {
+			if g.Index == len(g.WordString)-1 {
 				break
 			}
 		}
@@ -65,13 +65,13 @@ func (g *Game) Start() error {
 		if string(b) == string(g.WordString[g.Index]) {
 			fmt.Print("\033[1C")
 			g.Index++
-		// Incorrect
+			// Incorrect
 		} else {
 			g.TotalWrong++
 		}
 
 		// Line break
-		if g.Index == g.Width * g.Line {
+		if g.Index == g.Width*g.Line {
 			g.Line++
 			fmt.Print("\033[1B")
 			fmt.Printf("\033[%dD", g.Width)
@@ -81,21 +81,20 @@ func (g *Game) Start() error {
 	return nil
 }
 
-// Calculate words per minute.
+// WPM calculates words per minute.
 func (g *Game) WPM() int {
-	return int(math.Round(float64(g.TotalTyped - g.TotalWrong) / 5.0 / g.TotalTime.Minutes()))
+	return int(math.Round(float64(g.TotalTyped-g.TotalWrong) / 5.0 / g.TotalTime.Minutes()))
 }
 
-// Calculate the raw words per minute.
+// Raw calculates the raw words per minute.
 func (g *Game) Raw() int {
 	return int(math.Round(float64(g.TotalTyped) / 5.0 / g.TotalTime.Minutes()))
 }
 
-// Calculate the accuracy.
+// Accuracy calculates the accuracy.
 func (g *Game) Accuracy() int {
 	if g.TotalTyped != 0 {
-		return int(math.Round(float64(g.TotalTyped - g.TotalWrong) / float64(g.TotalTyped) * 100.0))
+		return int(math.Round(float64(g.TotalTyped-g.TotalWrong) / float64(g.TotalTyped) * 100.0))
 	}
 	return 100
 }
-
