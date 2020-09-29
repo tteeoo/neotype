@@ -29,20 +29,37 @@ func main() {
 	}
 
 	// Get data directory
-	share, err := util.ResolveShare()
+	shareDir, err := util.ResolveShare()
 	util.DieIf(err, "neotype: error: %s\n", err)
+
+	// Default config
+	config := util.Config{
+		Words: 12,
+	}
+
+	// Get config file
+	configFile, err := util.ResolveConfig()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "neotype: warning: could not locate config file:", err)
+	} else {
+		// Read config
+		err = config.Read(configFile)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "neotype: warning: could not read config file:", err)
+		}
+	}
 
 	// Get terminal width
 	w, _, err := terminal.GetSize(0)
 	util.DieIf(err, "neotype: error: cannot get terminal width: %s\n", err)
 
 	// Generate words
-	dictionaryB, err := ioutil.ReadFile(share + "/words.txt")
-	util.DieIf(err, "neotype: error: cannot read file '%s/words.txt': %s\n", share, err)
+	dictionaryB, err := ioutil.ReadFile(shareDir + "/words.txt")
+	util.DieIf(err, "neotype: error: cannot read file '%s/words.txt': %s\n", shareDir, err)
 	dictionary := strings.Split(string(dictionaryB), "\n")
 	rand.Seed(time.Now().Unix())
 	var chosen []string
-	for i := 0; i < 10; i++ {
+	for i := 0; i < config.Words; i++ {
 		chosen = append(chosen, dictionary[rand.Intn(len(dictionary))])
 	}
 

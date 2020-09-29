@@ -10,7 +10,7 @@ import (
 // DieIf printfs and exits if err != nil.
 func DieIf(err error, format string, a ...interface{}) {
 	if err != nil {
-		fmt.Printf(format, a...)
+		fmt.Fprintf(os.Stderr, format, a...)
 		os.Exit(1)
 	}
 }
@@ -41,4 +41,26 @@ func ResolveShare() (string, error) {
 		return "", errors.New("cannot access neotype data directory \"" + share + "\": " + err.Error())
 	}
 	return share, nil
+}
+
+// ResolveConfig is the equivalent of ResolveShare but for the config file.
+func ResolveConfig() (string, error) {
+	config := os.Getenv("NEOTYPE_CONFIG")
+	if config == "" {
+		config = os.Getenv("XDG_CONFIG_HOME")
+		if config == "" {
+			user, err := user.Current()
+			if err != nil {
+				return "", errors.New("cannot get current user: " + err.Error())
+			}
+			config = user.HomeDir + "/.config/neotype/config.json"
+		} else {
+			config += "/neotype/config.json"
+		}
+	}
+	_, err := os.Stat(config)
+	if err != nil {
+		return "", err
+	}
+	return config, nil
 }
