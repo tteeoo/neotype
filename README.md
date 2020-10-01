@@ -14,13 +14,13 @@ $ go build
 # cp neotype /usr/local/bin
 ```
 
-Note: the above commands will compile NeoType, but a pre-compiled binary (Linux x86-64) is also provided on the latest GitHub release.
+Note: The above commands will compile NeoType, but a pre-compiled binary (Linux x86-64) is also provided on the latest GitHub release.
 
 ## Usage
 
-Just run 'neotype' to start, optionally provide a number of words ('neotype --words x').
+Just run `neotype` to start, optionally provide a number of words: `neotype --words x`.
 
-You can set the environment variable NEOTYPE_DATA to the directory where NeoType will look for the 'words.txt' word list file.
+You can set the environment variable `NEOTYPE_DATA` to the directory where NeoType will look for the `words.txt` word list file.
 
 ## License
 
