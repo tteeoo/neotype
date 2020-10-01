@@ -4,6 +4,8 @@ Tired of needing to go to a website powered by bloated JavaScript just to do a t
 
 Fear no more, for NeoType is here! It runs in your UNIX terminal and is powered by classic ANSI escape codes!
 
+![preview](https://raw.githubusercontent.com/tteeoo/neotype/master/preview.gif)
+
 ## Installation
 
 ```
