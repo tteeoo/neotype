@@ -20,7 +20,13 @@ Note: The above commands will compile NeoType, but a pre-compiled binary (Linux 
 
 Just run `neotype` to start, optionally provide a number of words: `neotype --words x`.
 
-You can set the environment variable `NEOTYPE_DATA` to the directory where NeoType will look for the `words.txt` word list file.
+NeoType looks for the data directory at the following paths:
+
+```
+$NEOTYPE_DATA
+$XDG_DATA_HOME/neotype
+$HOME/.local/share/neotype
+```
 
 ## License
 
