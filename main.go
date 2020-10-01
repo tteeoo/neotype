@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"github.com/tteeoo/neotype/game"
 	"github.com/tteeoo/neotype/util"
@@ -14,48 +15,41 @@ import (
 	"time"
 )
 
+var version = flag.Bool("version", false, "Print version information and exit")
+var words = flag.Int("words", 0, "The number of words to test with")
+
 func main() {
+
+	flag.Parse()
 
 	// Default config
 	config := util.Config{
-		Words: 12,
+		Words: 20,
 	}
 
 	// Handle command-line arguments
-	if len(os.Args) > 1 {
-		switch os.Args[1] {
-		case "-V", "--version":
-			fmt.Println("neotype version 0.1.0\n" +
-				"created by Theo Henson\n" +
-				"source available at https://github.com/tteeoo/neotype\n" +
-				"licensed under the Unlicense")
-			return
-		}
+	if *version {
+		fmt.Println("NeoType version 0.1.0\n" +
+			"Created by Theo Henson\n" +
+			"Source available at https://github.com/tteeoo/neotype\n" +
+			"Licensed under the Unlicense")
+		os.Exit(1)
+	}
+	if *words != 0 {
+		config.Words = *words
 	}
 
 	// Get data directory
 	shareDir, err := util.ResolveShare()
-	util.DieIf(err, "neotype: error: %s\n", err)
-
-	// Get config file
-	configFile, err := util.ResolveConfig()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "neotype: warning: could not locate config file:", err)
-	} else {
-		// Read config
-		err = config.Read(configFile)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, "neotype: warning: could not read config file:", err)
-		}
-	}
+	util.DieIf(err, "NeoType: error: cannot find data directory: %s\n", err)
 
 	// Get terminal dimensions
 	w, h, err := terminal.GetSize(0)
-	util.DieIf(err, "neotype: error: cannot get terminal size: %s\n", err)
+	util.DieIf(err, "NeoType: error: cannot get terminal size: %s\n", err)
 
 	// Generate words
 	dictionaryB, err := ioutil.ReadFile(shareDir + "/words.txt")
-	util.DieIf(err, "neotype: error: cannot read file '%s/words.txt': %s\n", shareDir, err)
+	util.DieIf(err, "NeoType: error: cannot read file '%s/words.txt': %s\n", shareDir, err)
 	dictionary := strings.Split(string(dictionaryB), "\n")
 	rand.Seed(time.Now().Unix())
 	var chosen []string
@@ -83,7 +77,7 @@ func main() {
 			fmt.Printf("raw: %d\n", g.Raw())
 
 			err = exec.Command("stty", "-F", "/dev/tty", "echo").Run()
-			util.DieIf(err, "neotype: error: cannot run command 'stty -F /dev/tty echo': %s\n", err)
+			util.DieIf(err, "NeoType: error: cannot run command 'stty -F /dev/tty echo': %s\n", err)
 
 			os.Exit(0)
 		}
@@ -91,13 +85,13 @@ func main() {
 
 	// Hide input and remove CR buffer
 	err = exec.Command("stty", "-F", "/dev/tty", "cbreak", "min", "1").Run()
-	util.DieIf(err, "neotype: error: cannot run command 'stty -F /dev/tty cbreak min 1': %s\n", err)
+	util.DieIf(err, "NeoType: error: cannot run command 'stty -F /dev/tty cbreak min 1': %s\n", err)
 	err = exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
-	util.DieIf(err, "neotype: error: cannot run command 'stty -F /dev/tty -echo': %s\n", err)
+	util.DieIf(err, "NeoType: error: cannot run command 'stty -F /dev/tty -echo': %s\n", err)
 
 	// Start game
 	err = g.Start()
-	util.DieIf(err, "neotype: error: %s\n", err)
+	util.DieIf(err, "NeoType: error: %s\n", err)
 
 	fmt.Println("")
 	fmt.Print("\033[?1049l")
@@ -106,5 +100,7 @@ func main() {
 	fmt.Printf("raw: %d\n", g.Raw())
 
 	err = exec.Command("stty", "-F", "/dev/tty", "echo").Run()
-	util.DieIf(err, "neotype: error: cannot run command 'stty -F /dev/tty echo': %s\n", err)
+	util.DieIf(err, "NeoType: error: cannot run command 'stty -F /dev/tty echo': %s\n", err)
+
+	os.Exit(0)
 }

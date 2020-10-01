@@ -1,7 +1,6 @@
 package util
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"os/user"
@@ -24,7 +23,7 @@ func ResolveShare() (string, error) {
 		if share == "" {
 			user, err := user.Current()
 			if err != nil {
-				return "", errors.New("cannot get current user: " + err.Error())
+				return "", err
 			}
 			share = user.HomeDir + "/.local/share/neotype"
 		} else {
@@ -35,32 +34,10 @@ func ResolveShare() (string, error) {
 	if os.IsNotExist(err) {
 		err = os.Mkdir(share, 0755)
 		if err != nil {
-			return "", errors.New("cannot create neotype data directory \"" + share + "\": " + err.Error())
+			return "", err
 		}
 	} else if err != nil {
-		return "", errors.New("cannot access neotype data directory \"" + share + "\": " + err.Error())
-	}
-	return share, nil
-}
-
-// ResolveConfig is the equivalent of ResolveShare but for the config file.
-func ResolveConfig() (string, error) {
-	config := os.Getenv("NEOTYPE_CONFIG")
-	if config == "" {
-		config = os.Getenv("XDG_CONFIG_HOME")
-		if config == "" {
-			user, err := user.Current()
-			if err != nil {
-				return "", errors.New("cannot get current user: " + err.Error())
-			}
-			config = user.HomeDir + "/.config/neotype/config.json"
-		} else {
-			config += "/neotype/config.json"
-		}
-	}
-	_, err := os.Stat(config)
-	if err != nil {
 		return "", err
 	}
-	return config, nil
+	return share, nil
 }
