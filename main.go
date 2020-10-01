@@ -49,9 +49,9 @@ func main() {
 		}
 	}
 
-	// Get terminal width
-	w, _, err := terminal.GetSize(0)
-	util.DieIf(err, "neotype: error: cannot get terminal width: %s\n", err)
+	// Get terminal dimensions
+	w, h, err := terminal.GetSize(0)
+	util.DieIf(err, "neotype: error: cannot get terminal size: %s\n", err)
 
 	// Generate words
 	dictionaryB, err := ioutil.ReadFile(shareDir + "/words.txt")
@@ -67,7 +67,7 @@ func main() {
 	g := game.Game{
 		WordString: strings.Join(chosen, " "),
 		Width:      w,
-		Line:       1,
+		Height:      h,
 	}
 
 	// Handle Ctrl+C

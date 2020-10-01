@@ -16,6 +16,10 @@ type Game struct {
 	TotalTime  time.Duration
 	WordString string
 	Width      int
+	Height      int
+
+	Lines      []string
+	Page int
 
 	Line       int
 	Index      int
@@ -26,10 +30,34 @@ type Game struct {
 // Start the game.
 func (g *Game) Start() error {
 
+	var scrollMode bool
+	if g.Width * g.Height < len(g.WordString) {
+		scrollMode = true
+	}
+
 	// Initialize screen
 	fmt.Print("\033[?1049h")
 	fmt.Print("\033[H\033[2J")
-	fmt.Println(g.WordString)
+	g.Line = 1
+	g.Page = 1
+
+	if scrollMode {
+		chars := len(g.WordString)
+		var begin, end int
+		for {
+			end = begin + g.Width
+			if end >= chars {
+				g.Lines = append(g.Lines, g.WordString[chars - (chars % g.Width):])
+				break
+			}
+			g.Lines = append(g.Lines, g.WordString[begin:end])
+			begin = end
+		}
+		fmt.Print(g.NewPrintBuffer())
+	} else {
+		fmt.Print(g.WordString)
+	}
+
 	fmt.Printf("\033[%dA", int(len(g.WordString)/g.Width)+1)
 	fmt.Printf("\033[%dD", g.Width)
 
@@ -73,12 +101,45 @@ func (g *Game) Start() error {
 		// Line break
 		if g.Index == g.Width*g.Line {
 			g.Line++
-			fmt.Print("\033[1B")
-			fmt.Printf("\033[%dD", g.Width)
+			if scrollMode {
+				if g.Page == 1 && g.Line == g.Page * g.Height + 1 {
+					g.Page++
+					fmt.Print("\033[H\033[2J")
+					fmt.Print(g.NewPrintBuffer())
+					fmt.Printf("\033[%dA", int(len(g.WordString)/g.Width)+1)
+					fmt.Printf("\033[%dD", g.Width)
+				} else if g.Page != 1 && g.Line == g.Page * g.Height - 1 {
+					g.Page++
+					fmt.Print("\033[H\033[2J")
+					fmt.Print(g.NewPrintBuffer())
+					fmt.Printf("\033[%dA", int(len(g.WordString)/g.Width)+1)
+					fmt.Printf("\033[%dD", g.Width)
+				} else {
+					fmt.Print("\033[1B")
+					fmt.Printf("\033[%dD", g.Width)
+				}
+			} else {
+				fmt.Print("\033[1B")
+				fmt.Printf("\033[%dD", g.Width)
+			}
 		}
 	}
 
 	return nil
+}
+
+func (g *Game) NewPrintBuffer() string {
+	var printBuffer string
+	var slice []string
+	if g.Line-1 + g.Height > len(g.Lines) {
+		slice = g.Lines[g.Line-1:]
+	} else {
+		slice = g.Lines[g.Line-1:g.Line-1+g.Height]
+	}
+	for i := 0; i < len(slice); i++ {
+		printBuffer += slice[i]
+	}
+	return printBuffer
 }
 
 // WPM calculates words per minute.
