@@ -16,10 +16,10 @@ type Game struct {
 	TotalTime  time.Duration
 	WordString string
 	Width      int
-	Height      int
+	Height     int
 
-	Lines      []string
-	Page int
+	Lines []string
+	Page  int
 
 	Line       int
 	Index      int
@@ -31,7 +31,7 @@ type Game struct {
 func (g *Game) Start() error {
 
 	var scrollMode bool
-	if g.Width * g.Height < len(g.WordString) {
+	if g.Width*g.Height < len(g.WordString) {
 		scrollMode = true
 	}
 
@@ -47,7 +47,7 @@ func (g *Game) Start() error {
 		for {
 			end = begin + g.Width
 			if end >= chars {
-				g.Lines = append(g.Lines, g.WordString[chars - (chars % g.Width):])
+				g.Lines = append(g.Lines, g.WordString[chars-(chars%g.Width):])
 				break
 			}
 			g.Lines = append(g.Lines, g.WordString[begin:end])
@@ -102,13 +102,13 @@ func (g *Game) Start() error {
 		if g.Index == g.Width*g.Line {
 			g.Line++
 			if scrollMode {
-				if g.Page == 1 && g.Line == g.Page * g.Height + 1 {
+				if g.Page == 1 && g.Line == g.Page*g.Height+1 {
 					g.Page++
 					fmt.Print("\033[H\033[2J")
 					fmt.Print(g.NewPrintBuffer())
 					fmt.Printf("\033[%dA", int(len(g.WordString)/g.Width)+1)
 					fmt.Printf("\033[%dD", g.Width)
-				} else if g.Page != 1 && g.Line == g.Page * g.Height - 1 {
+				} else if g.Page != 1 && g.Line == g.Page*g.Height-1 {
 					g.Page++
 					fmt.Print("\033[H\033[2J")
 					fmt.Print(g.NewPrintBuffer())
@@ -128,13 +128,14 @@ func (g *Game) Start() error {
 	return nil
 }
 
+// NewPrintBuffer returns the next string to be printed when in scroll mode
 func (g *Game) NewPrintBuffer() string {
 	var printBuffer string
 	var slice []string
-	if g.Line-1 + g.Height > len(g.Lines) {
+	if g.Line-1+g.Height > len(g.Lines) {
 		slice = g.Lines[g.Line-1:]
 	} else {
-		slice = g.Lines[g.Line-1:g.Line-1+g.Height]
+		slice = g.Lines[g.Line-1 : g.Line-1+g.Height]
 	}
 	for i := 0; i < len(slice); i++ {
 		printBuffer += slice[i]

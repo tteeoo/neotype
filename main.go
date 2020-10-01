@@ -67,7 +67,7 @@ func main() {
 	g := game.Game{
 		WordString: strings.Join(chosen, " "),
 		Width:      w,
-		Height:      h,
+		Height:     h,
 	}
 
 	// Handle Ctrl+C
