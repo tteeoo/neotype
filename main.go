@@ -23,9 +23,7 @@ func main() {
 	flag.Parse()
 
 	// Default config
-	config := util.Config{
-		Words: 20,
-	}
+	numWords := 20
 
 	// Handle command-line arguments
 	if *version {
@@ -36,7 +34,7 @@ func main() {
 		os.Exit(1)
 	}
 	if *words != 0 {
-		config.Words = *words
+		numWords = *words
 	}
 
 	// Get data directory
@@ -53,7 +51,7 @@ func main() {
 	dictionary := strings.Split(string(dictionaryB), "\n")
 	rand.Seed(time.Now().Unix())
 	var chosen []string
-	for i := 0; i < config.Words; i++ {
+	for i := 0; i < numWords; i++ {
 		chosen = append(chosen, dictionary[rand.Intn(len(dictionary))])
 	}
 
