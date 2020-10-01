@@ -1,9 +1,9 @@
-neotype
+NeoType
 =======
 
 Tired of needing to go to a website powered by bloated JavaScript just to do a typing test?
 
-Fear no more, for neotype is here! It runs in your UNIX terminal and is powered by classic ANSI escape codes!
+Fear no more, for NeoType is here! It runs in your UNIX terminal and is powered by classic ANSI escape codes!
 
 Installation
 ============
@@ -18,6 +18,8 @@ Note: the above commands will compile neotype, but a pre-compiled binary is also
 
 Usage
 =====
+
+Just run 'neotype' to start, optionally provide a number of words ('neotype --words x').
 
 License
 =======
