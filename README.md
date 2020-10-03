@@ -13,7 +13,7 @@ It's currently quite minimal, partially by design, but I am also not sure what I
 ```
 $ git clone https://github.com/tteeoo/neotype
 $ cd neotype
-$ install -d share ~/.local/share/neotype
+$ mkdir ~/.local/share/neotype && cp share/words.txt ~/.local/share/neotype
 $ go build
 # cp neotype /usr/local/bin
 ```
