@@ -6,7 +6,7 @@ Fear no more, for NeoType is here! It runs in your UNIX terminal and is powered 
 
 ![preview](https://raw.githubusercontent.com/tteeoo/neotype/master/preview.gif)
 
-It's currently quite minimal, partially by design, but I am also not sure what I should add. Open an issue if you have any feature requests!
+It's currently quite minimal, partially by design, but I am also not sure what I should add. Open an issue (or better yet, a PR) if you have any feature requests!
 
 ## Installation
 
