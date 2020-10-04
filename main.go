@@ -47,6 +47,12 @@ func main() {
 	dictionaryB, err := ioutil.ReadFile(wordFilePath)
 	util.DieIf(err, "NeoType: error: cannot read file \"%s\": %s\n", wordFilePath, err)
 	dictionary := strings.Split(string(dictionaryB), "\n")
+	for i, v := range dictionary {
+		if v == "" {
+			dictionary[len(dictionary)-1], dictionary[i] = dictionary[i], dictionary[len(dictionary)-1]
+			dictionary = dictionary[:len(dictionary)-1]
+		}
+	}
 	rand.Seed(time.Now().Unix())
 	var chosen []string
 	for i := 0; i < *words; i++ {
