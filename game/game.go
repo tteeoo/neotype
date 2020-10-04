@@ -70,7 +70,7 @@ func (g *Game) Start() error {
 		if err != nil {
 			err2 := exec.Command("stty", "-F", "/dev/tty", "echo").Run()
 			if err2 != nil {
-				return errors.New("cannot run command 'stty -F /dev/tty echo': " + err.Error())
+				return errors.New("cannot run command \"stty -F /dev/tty echo\": " + err.Error())
 			}
 			return errors.New("cannot read stdin")
 		}

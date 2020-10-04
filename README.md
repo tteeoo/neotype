@@ -22,7 +22,11 @@ Note: The above commands will compile NeoType, but a pre-compiled binary (Linux 
 
 ## Usage
 
-Just run `neotype` to start, optionally provide a number of words: `neotype --words x`.
+Just run `neotype` to start.
+
+Options:
+* `-wordfile <string>`: The name of the wordlist file in the data directory (default "words.txt").
+* `-words <int>`: The number of words to test with.
 
 NeoType looks for the data directory at the following paths:
 

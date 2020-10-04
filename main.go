@@ -19,7 +19,7 @@ import (
 
 var version = flag.Bool("version", false, "Print version information and exit")
 var words = flag.Int("words", 0, "The number of words to test with")
-var wordFile = flag.String("wordfile", "words.txt", "The name of the wordlist in the data directory")
+var wordFile = flag.String("wordfile", "words.txt", "The name of the wordlist file in the data directory")
 
 func main() {
 
@@ -30,7 +30,7 @@ func main() {
 
 	// Handle command-line arguments
 	if *version {
-		fmt.Println("NeoType version 0.1.0\n" +
+		fmt.Println("NeoType version 0.1.1\n" +
 			"Created by Theo Henson\n" +
 			"Source available at https://github.com/tteeoo/neotype\n" +
 			"Licensed under the Unlicense")
@@ -51,7 +51,7 @@ func main() {
 	// Generate words
 	wordFilePath := filepath.Join(shareDir, *wordFile)
 	dictionaryB, err := ioutil.ReadFile(wordFilePath)
-	util.DieIf(err, "NeoType: error: cannot read file '%s': %s\n", wordFilePath, err)
+	util.DieIf(err, "NeoType: error: cannot read file \"%s\": %s\n", wordFilePath, err)
 	dictionary := strings.Split(string(dictionaryB), "\n")
 	rand.Seed(time.Now().Unix())
 	var chosen []string
@@ -79,7 +79,7 @@ func main() {
 			fmt.Printf("raw: %d\n", g.Raw())
 
 			err = exec.Command("stty", "-F", "/dev/tty", "echo").Run()
-			util.DieIf(err, "NeoType: error: cannot run command 'stty -F /dev/tty echo': %s\n", err)
+			util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty echo\": %s\n", err)
 
 			os.Exit(0)
 		}
@@ -87,9 +87,9 @@ func main() {
 
 	// Hide input and remove CR buffer
 	err = exec.Command("stty", "-F", "/dev/tty", "cbreak", "min", "1").Run()
-	util.DieIf(err, "NeoType: error: cannot run command 'stty -F /dev/tty cbreak min 1': %s\n", err)
+	util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty cbreak min 1\": %s\n", err)
 	err = exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
-	util.DieIf(err, "NeoType: error: cannot run command 'stty -F /dev/tty -echo': %s\n", err)
+	util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty -echo\": %s\n", err)
 
 	// Start game
 	err = g.Start()
@@ -102,7 +102,8 @@ func main() {
 	fmt.Printf("raw: %d\n", g.Raw())
 
 	err = exec.Command("stty", "-F", "/dev/tty", "echo").Run()
-	util.DieIf(err, "NeoType: error: cannot run command 'stty -F /dev/tty echo': %s\n", err)
+	util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty echo\": %s\n", err)
+
 
 	os.Exit(0)
 }
