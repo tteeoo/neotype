@@ -18,15 +18,12 @@ import (
 )
 
 var version = flag.Bool("version", false, "Print version information and exit")
-var words = flag.Int("words", 0, "The number of words to test with")
+var words = flag.Int("words", 20, "The number of words to test with")
 var wordFile = flag.String("wordfile", "words.txt", "The name of the wordlist file in the data directory")
 
 func main() {
 
 	flag.Parse()
-
-	// Default config
-	numWords := 20
 
 	// Handle command-line arguments
 	if *version {
@@ -35,9 +32,6 @@ func main() {
 			"Source available at https://github.com/tteeoo/neotype\n" +
 			"Licensed under the Unlicense")
 		os.Exit(1)
-	}
-	if *words != 0 {
-		numWords = *words
 	}
 
 	// Get data directory
@@ -55,7 +49,7 @@ func main() {
 	dictionary := strings.Split(string(dictionaryB), "\n")
 	rand.Seed(time.Now().Unix())
 	var chosen []string
-	for i := 0; i < numWords; i++ {
+	for i := 0; i < *words; i++ {
 		chosen = append(chosen, dictionary[rand.Intn(len(dictionary))])
 	}
 

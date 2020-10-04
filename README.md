@@ -26,7 +26,7 @@ Just run `neotype` to start.
 
 Options:
 * `-wordfile <string>`: The name of the wordlist file in the data directory (default "words.txt").
-* `-words <int>`: The number of words to test with.
+* `-words <int>`: The number of words to test with (default 20).
 
 NeoType looks for the data directory at the following paths:
 
