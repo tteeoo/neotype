@@ -3,20 +3,23 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/tteeoo/neotype/game"
-	"github.com/tteeoo/neotype/util"
-	"golang.org/x/crypto/ssh/terminal"
 	"io/ioutil"
 	"math/rand"
 	"os"
 	"os/exec"
 	"os/signal"
+	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/tteeoo/neotype/game"
+	"github.com/tteeoo/neotype/util"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 var version = flag.Bool("version", false, "Print version information and exit")
 var words = flag.Int("words", 0, "The number of words to test with")
+var wordFile = flag.String("wordfile", "words.txt", "The name of the wordlist in the data directory")
 
 func main() {
 
@@ -46,8 +49,9 @@ func main() {
 	util.DieIf(err, "NeoType: error: cannot get terminal size: %s\n", err)
 
 	// Generate words
-	dictionaryB, err := ioutil.ReadFile(shareDir + "/words.txt")
-	util.DieIf(err, "NeoType: error: cannot read file '%s/words.txt': %s\n", shareDir, err)
+	wordFilePath := filepath.Join(shareDir, *wordFile)
+	dictionaryB, err := ioutil.ReadFile(wordFilePath)
+	util.DieIf(err, "NeoType: error: cannot read file '%s': %s\n", wordFilePath, err)
 	dictionary := strings.Split(string(dictionaryB), "\n")
 	rand.Seed(time.Now().Unix())
 	var chosen []string
