@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -35,7 +34,8 @@ func main() {
 	}
 
 	// Get data directory
-	shareDir, err := util.ResolveShare()
+	shareDirs := util.GetSharePaths()
+	wordFilePath, err := util.ResolveFilePath(*wordFile, shareDirs...)
 	util.DieIf(err, "NeoType: error: cannot find data directory: %s\n", err)
 
 	// Get terminal dimensions
@@ -43,7 +43,6 @@ func main() {
 	util.DieIf(err, "NeoType: error: cannot get terminal size: %s\n", err)
 
 	// Generate words
-	wordFilePath := filepath.Join(shareDir, *wordFile)
 	dictionaryB, err := ioutil.ReadFile(wordFilePath)
 	util.DieIf(err, "NeoType: error: cannot read file \"%s\": %s\n", wordFilePath, err)
 	dictionary := strings.Split(string(dictionaryB), "\n")
@@ -103,7 +102,6 @@ func main() {
 
 	err = exec.Command("stty", "-F", "/dev/tty", "echo").Run()
 	util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty echo\": %s\n", err)
-
 
 	os.Exit(0)
 }
