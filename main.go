@@ -104,6 +104,5 @@ func main() {
 	err = exec.Command("stty", "-F", "/dev/tty", "echo").Run()
 	util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty echo\": %s\n", err)
 
-
 	os.Exit(0)
 }
