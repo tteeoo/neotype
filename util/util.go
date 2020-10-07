@@ -65,17 +65,12 @@ func getSharePath() (string, error) {
 // ResolveFilePath checks the working directory and the share
 // for the given file, then returns the path if available.
 func ResolveFilePath(filename string) (string, error) {
-	workingDir, err := os.Getwd()
-	if err != nil {
-		return "", err
-	}
-	workingDirFile := path.Join(workingDir, filename)
-	matched, err := fileExists(workingDirFile)
+	matched, err := fileExists(filename)
 	if err != nil {
 		return "", err
 	}
 	if matched {
-		return workingDirFile, nil
+		return filename, nil
 	}
 
 	sharePath, err := getSharePath()
