@@ -36,16 +36,16 @@ func main() {
 
 	// Get data directory
 	shareDir, err := util.ResolveShare()
-	util.DieIf(err, "NeoType: error: cannot find data directory: %s\n", err)
+	util.DieIf(err, "NeoType: Error: Cannot find data directory: %s\n", err)
 
 	// Get terminal dimensions
 	w, h, err := terminal.GetSize(0)
-	util.DieIf(err, "NeoType: error: cannot get terminal size: %s\n", err)
+	util.DieIf(err, "NeoType: Error: Cannot get terminal size: %s\n", err)
 
 	// Generate words
 	wordFilePath := filepath.Join(shareDir, *wordFile)
 	dictionaryB, err := ioutil.ReadFile(wordFilePath)
-	util.DieIf(err, "NeoType: error: cannot read file \"%s\": %s\n", wordFilePath, err)
+	util.DieIf(err, "NeoType: Error: Cannot read file \"%s\": %s\n", wordFilePath, err)
 	dictionary := strings.Split(string(dictionaryB), "\n")
 	var fixedDictionary []string
 	for _, v := range dictionary {
@@ -74,12 +74,12 @@ func main() {
 			fmt.Print("\033[H\033[2J")
 			fmt.Print("\033[?1049l")
 
-			fmt.Printf("wpm: %d\n", g.WPM())
-			fmt.Printf("acc: %d\n", g.Accuracy())
-			fmt.Printf("raw: %d\n", g.Raw())
+			fmt.Printf("WPM: %d\n", g.WPM())
+			fmt.Printf("Acc: %d\n", g.Accuracy())
+			fmt.Printf("Raw: %d\n", g.Raw())
 
 			err = exec.Command("stty", "-F", "/dev/tty", "echo").Run()
-			util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty echo\": %s\n", err)
+			util.DieIf(err, "NeoType: Error: Cannot run command \"stty -F /dev/tty echo\": %s\n", err)
 
 			os.Exit(0)
 		}
@@ -87,22 +87,22 @@ func main() {
 
 	// Hide input and remove CR buffer
 	err = exec.Command("stty", "-F", "/dev/tty", "cbreak", "min", "1").Run()
-	util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty cbreak min 1\": %s\n", err)
+	util.DieIf(err, "NeoType: Error: Cannot run command \"stty -F /dev/tty cbreak min 1\": %s\n", err)
 	err = exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
-	util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty -echo\": %s\n", err)
+	util.DieIf(err, "NeoType: Error: Cannot run command \"stty -F /dev/tty -echo\": %s\n", err)
 
 	// Start game
 	err = g.Start()
-	util.DieIf(err, "NeoType: error: %s\n", err)
+	util.DieIf(err, "NeoType: Error: Cannot start the game: %s\n", err)
 
 	fmt.Println("")
 	fmt.Print("\033[?1049l")
-	fmt.Printf("wpm: %d\n", g.WPM())
-	fmt.Printf("acc: %d\n", g.Accuracy())
-	fmt.Printf("raw: %d\n", g.Raw())
+	fmt.Printf("WPM: %d\n", g.WPM())
+	fmt.Printf("Acc: %d\n", g.Accuracy())
+	fmt.Printf("Raw: %d\n", g.Raw())
 
 	err = exec.Command("stty", "-F", "/dev/tty", "echo").Run()
-	util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty echo\": %s\n", err)
+	util.DieIf(err, "NeoType: Wrror: Cannot run command \"stty -F /dev/tty echo\": %s\n", err)
 
 	os.Exit(0)
 }
