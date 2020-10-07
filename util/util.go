@@ -7,7 +7,6 @@ import (
 	"os/user"
 	"path"
 	"path/filepath"
-	"strings"
 )
 
 // DieIf printfs and exits if err != nil.
@@ -44,73 +43,60 @@ func fileExists(filename string) (bool, error) {
 	return !info.IsDir(), nil
 }
 
-// appendUnique will append any unique string to the slice.
-// If the string is already in the slice, the slice is returned unchanged.
-func appendUnique(slice []string, str string) []string {
-	for _, s := range slice {
-		if s == str {
-			return slice
-		}
-	}
-	return append(slice, str)
-}
-
-// GetSharePaths returns an array of all unique defined
-// locations that may contain wordlist data.
-func GetSharePaths() (shares []string) {
-	workingDir, err := os.Getwd()
-	if err == nil {
-		shares = append(shares, workingDir)
-	}
-
+func getSharePath() (string, error) {
 	neotypeData := os.Getenv("NEOTYPE_DATA")
 	if neotypeData != "" {
-		shares = appendUnique(shares, neotypeData)
+		return neotypeData, nil
 	}
 
 	xdgDataHome := os.Getenv("XDG_DATA_HOME")
 	if xdgDataHome != "" {
-		shares = appendUnique(shares, filepath.Join(xdgDataHome, "/neotype"))
+		return filepath.Join(xdgDataHome, "/neotype"), nil
 	}
 
 	user, err := user.Current()
 	if err == nil {
-		shares = appendUnique(shares, filepath.Join(user.HomeDir, "/.local/share/neotype"))
+		return filepath.Join(user.HomeDir, "/.local/share/neotype"), nil
 	}
 
-	return shares
+	return "", err
 }
 
-// ResolveFilePath checks multiple paths for the given wordlist,
-// then returns the path if available. It returns an error if more
-// than one potential wordlist is found.
-func ResolveFilePath(filename string, shares ...string) (string, error) {
-	matchedFiles := []string{}
+// ResolveFilePath checks the working directory and the share
+// for the given file, then returns the path if available.
+func ResolveFilePath(filename string) (string, error) {
+	workingDir, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+	workingDirFile := path.Join(workingDir, filename)
+	matched, err := fileExists(workingDirFile)
+	if err != nil {
+		return "", err
+	}
+	if matched {
+		return workingDirFile, nil
+	}
 
-	for _, d := range shares {
-		created, err := createDirectory(d)
+	sharePath, err := getSharePath()
+	if err != nil {
+		return "", err
+	}
+
+	created, err := createDirectory(sharePath)
+	if err != nil {
+		return "", err
+	}
+	if !created {
+		sharePathFile := path.Join(sharePath, filename)
+		matched, err := fileExists(sharePathFile)
 		if err != nil {
 			return "", err
 		}
-		if !created {
-			filepath := path.Join(d, filename)
-			matched, err := fileExists(filepath)
-			if err != nil {
-				return "", err
-			}
-			if matched {
-				matchedFiles = append(matchedFiles, filepath)
-			}
+		if matched {
+			return sharePathFile, nil
 		}
 	}
 
-	if len(matchedFiles) == 1 {
-		return matchedFiles[0], nil
-	}
-
-	if len(matchedFiles) > 1 {
-		return "", errors.New("Matched multiple files: " + strings.Join(matchedFiles, ", "))
-	}
-
-	return "", errors.New("Wordfile was not found in any of these locations: " + strings.Join(shares, ", "))
+	return "", errors.New("No searched directories contained the requested file")
 }

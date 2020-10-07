@@ -33,10 +33,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Get data directory
-	shareDirs := util.GetSharePaths()
-	wordFilePath, err := util.ResolveFilePath(*wordFile, shareDirs...)
-	util.DieIf(err, "NeoType: error: cannot find data directory: %s\n", err)
+	// Get word file
+	wordFilePath, err := util.ResolveFilePath(*wordFile)
+	util.DieIf(err, "NeoType: error: cannot find word file: %s\n", err)
 
 	// Get terminal dimensions
 	w, h, err := terminal.GetSize(0)
