@@ -35,26 +35,26 @@ func main() {
 
 	// Get word file
 	wordFilePath, err := util.ResolveFilePath(*wordFile)
-	util.DieIf(err, "NeoType: error: cannot find word file: %s\n", err)
+	util.DieIf(err, "NeoType: Error: cannot find word file: %s\n", err)
 
 	// Get terminal dimensions
 	w, h, err := terminal.GetSize(0)
-	util.DieIf(err, "NeoType: error: cannot get terminal size: %s\n", err)
+	util.DieIf(err, "NeoType: Error: Cannot get terminal size: %s\n", err)
 
 	// Generate words
 	dictionaryB, err := ioutil.ReadFile(wordFilePath)
-	util.DieIf(err, "NeoType: error: cannot read file \"%s\": %s\n", wordFilePath, err)
+	util.DieIf(err, "NeoType: Error: Cannot read file \"%s\": %s\n", wordFilePath, err)
 	dictionary := strings.Split(string(dictionaryB), "\n")
-	for i, v := range dictionary {
-		if v == "" {
-			dictionary[len(dictionary)-1], dictionary[i] = dictionary[i], dictionary[len(dictionary)-1]
-			dictionary = dictionary[:len(dictionary)-1]
+	var fixedDictionary []string
+	for _, v := range dictionary {
+		if v != "" && v != "\t" {
+			fixedDictionary = append(fixedDictionary, v)
 		}
 	}
 	rand.Seed(time.Now().Unix())
 	var chosen []string
 	for i := 0; i < *words; i++ {
-		chosen = append(chosen, dictionary[rand.Intn(len(dictionary))])
+		chosen = append(chosen, fixedDictionary[rand.Intn(len(fixedDictionary))])
 	}
 
 	// Declare Game
@@ -72,12 +72,12 @@ func main() {
 			fmt.Print("\033[H\033[2J")
 			fmt.Print("\033[?1049l")
 
-			fmt.Printf("wpm: %d\n", g.WPM())
-			fmt.Printf("acc: %d\n", g.Accuracy())
-			fmt.Printf("raw: %d\n", g.Raw())
+			fmt.Printf("WPM: %d\n", g.WPM())
+			fmt.Printf("Acc: %d\n", g.Accuracy())
+			fmt.Printf("Raw: %d\n", g.Raw())
 
 			err = exec.Command("stty", "-F", "/dev/tty", "echo").Run()
-			util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty echo\": %s\n", err)
+			util.DieIf(err, "NeoType: Error: Cannot run command \"stty -F /dev/tty echo\": %s\n", err)
 
 			os.Exit(0)
 		}
@@ -85,22 +85,22 @@ func main() {
 
 	// Hide input and remove CR buffer
 	err = exec.Command("stty", "-F", "/dev/tty", "cbreak", "min", "1").Run()
-	util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty cbreak min 1\": %s\n", err)
+	util.DieIf(err, "NeoType: Error: Cannot run command \"stty -F /dev/tty cbreak min 1\": %s\n", err)
 	err = exec.Command("stty", "-F", "/dev/tty", "-echo").Run()
-	util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty -echo\": %s\n", err)
+	util.DieIf(err, "NeoType: Error: Cannot run command \"stty -F /dev/tty -echo\": %s\n", err)
 
 	// Start game
 	err = g.Start()
-	util.DieIf(err, "NeoType: error: %s\n", err)
+	util.DieIf(err, "NeoType: Error: Cannot start the game: %s\n", err)
 
 	fmt.Println("")
 	fmt.Print("\033[?1049l")
-	fmt.Printf("wpm: %d\n", g.WPM())
-	fmt.Printf("acc: %d\n", g.Accuracy())
-	fmt.Printf("raw: %d\n", g.Raw())
+	fmt.Printf("WPM: %d\n", g.WPM())
+	fmt.Printf("Acc: %d\n", g.Accuracy())
+	fmt.Printf("Raw: %d\n", g.Raw())
 
 	err = exec.Command("stty", "-F", "/dev/tty", "echo").Run()
-	util.DieIf(err, "NeoType: error: cannot run command \"stty -F /dev/tty echo\": %s\n", err)
+	util.DieIf(err, "NeoType: Wrror: Cannot run command \"stty -F /dev/tty echo\": %s\n", err)
 
 	os.Exit(0)
 }

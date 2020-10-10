@@ -27,7 +27,7 @@ type Game struct {
 	TotalWrong int
 }
 
-// Start the game.
+// Start will start the game's main execution loop and print to the screen.
 func (g *Game) Start() error {
 
 	var scrollMode bool
@@ -70,9 +70,9 @@ func (g *Game) Start() error {
 		if err != nil {
 			err2 := exec.Command("stty", "-F", "/dev/tty", "echo").Run()
 			if err2 != nil {
-				return errors.New("cannot run command \"stty -F /dev/tty echo\": " + err.Error())
+				return errors.New("Cannot run command \"stty -F /dev/tty echo\": " + err.Error())
 			}
-			return errors.New("cannot read stdin")
+			return errors.New("Cannot read from standard input")
 		}
 		g.TotalTyped++
 
@@ -93,8 +93,8 @@ func (g *Game) Start() error {
 		if string(b) == string(g.WordString[g.Index]) {
 			fmt.Print("\033[1C")
 			g.Index++
-			// Incorrect
 		} else {
+			// Incorrect
 			g.TotalWrong++
 		}
 
