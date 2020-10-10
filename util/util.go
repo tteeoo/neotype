@@ -1,11 +1,9 @@
 package util
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"os/user"
-	"path"
 	"path/filepath"
 )
 
@@ -22,22 +20,27 @@ func DieIf(err error, format string, a ...interface{}) {
 // if a directory was created, and false if it was not.
 func createDirectory(path string) (bool, error) {
 	_, err := os.Stat(path)
+
 	if os.IsNotExist(err) {
 		if err = os.Mkdir(path, 0755); err != nil {
 			return false, err
 		}
 		return true, nil
-	} else if err != nil {
+	}
+	if err != nil {
 		return false, err
 	}
 	return false, nil
 }
 
+// fileExists returns true if the file exists and is not a directory.
 func fileExists(filename string) (bool, error) {
 	info, err := os.Stat(filename)
+
 	if os.IsNotExist(err) {
 		return false, nil
-	} else if err != nil {
+	}
+	if err != nil {
 		return false, err
 	}
 	return !info.IsDir(), nil
@@ -63,35 +66,37 @@ func getSharePath() (string, error) {
 }
 
 // ResolveFilePath checks the working directory and the share
-// for the given file, then returns the path if available.
-func ResolveFilePath(filename string) (string, error) {
-	matched, err := fileExists(filename)
+// for the given file, then returns the filepath if available.
+func ResolveFilePath(file string) (string, error) {
+	matched, err := fileExists(file)
 	if err != nil {
 		return "", err
 	}
 	if matched {
-		return filename, nil
+		return file, nil
 	}
 
-	sharePath, err := getSharePath()
+	share, err := getSharePath()
 	if err != nil {
 		return "", err
 	}
 
-	created, err := createDirectory(sharePath)
+	created, err := createDirectory(share)
 	if err != nil {
 		return "", err
 	}
-	if !created {
-		sharePathFile := path.Join(sharePath, filename)
-		matched, err := fileExists(sharePathFile)
-		if err != nil {
-			return "", err
-		}
-		if matched {
-			return sharePathFile, nil
-		}
+	if created {
+		return "", fmt.Errorf("No file was found at: %s. A share was created at: %s", file, share)
 	}
 
-	return "", errors.New("No searched directories contained the requested file")
+	shareFile := filepath.Join(share, file)
+	matched, err = fileExists(shareFile)
+	if err != nil {
+		return "", err
+	}
+	if matched {
+		return shareFile, nil
+	}
+
+	return "", fmt.Errorf("No file match at %s or %s", file, shareFile)
 }

@@ -35,7 +35,7 @@ func main() {
 
 	// Get word file
 	wordFilePath, err := util.ResolveFilePath(*wordFile)
-	util.DieIf(err, "NeoType: Error: cannot find word file: %s\n", err)
+	util.DieIf(err, "NeoType: Error: Cannot find word file: %s\n", err)
 
 	// Get terminal dimensions
 	w, h, err := terminal.GetSize(0)
@@ -100,7 +100,7 @@ func main() {
 	fmt.Printf("Raw: %d\n", g.Raw())
 
 	err = exec.Command("stty", "-F", "/dev/tty", "echo").Run()
-	util.DieIf(err, "NeoType: Wrror: Cannot run command \"stty -F /dev/tty echo\": %s\n", err)
+	util.DieIf(err, "NeoType: Error: Cannot run command \"stty -F /dev/tty echo\": %s\n", err)
 
 	os.Exit(0)
 }
