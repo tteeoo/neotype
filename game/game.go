@@ -1,7 +1,6 @@
 package game
 
 import (
-	"errors"
 	"fmt"
 	"math"
 	"os"
@@ -70,9 +69,9 @@ func (g *Game) Start() error {
 		if err != nil {
 			err2 := exec.Command("stty", "-F", "/dev/tty", "echo").Run()
 			if err2 != nil {
-				return errors.New("Cannot run command \"stty -F /dev/tty echo\": " + err.Error())
+				return fmt.Errorf("Cannot run command \"stty -F /dev/tty echo\": %s", err)
 			}
-			return errors.New("Cannot read from standard input")
+			return fmt.Errorf("Cannot read from standard input")
 		}
 		g.TotalTyped++
 
