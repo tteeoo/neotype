@@ -27,8 +27,8 @@ func main() {
 
 	// Handle command-line arguments
 	if *version {
-		fmt.Println("NeoType version 0.1.2\n" +
-			"Created by Theo Henson\n" +
+		fmt.Println("NeoType version 0.1.3\n" +
+			"Created by Theo Henson and contributors\n" +
 			"Source available at https://github.com/tteeoo/neotype\n" +
 			"Licensed under the Unlicense")
 		os.Exit(1)
