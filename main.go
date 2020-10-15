@@ -16,9 +16,9 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
-var version = flag.Bool("version", false, "Print version information and exit")
-var words = flag.Int("words", 20, "The number of words to test with")
-var wordFile = flag.String("wordfile", "words.txt", "The name of the wordlist file in the data directory")
+var version = flag.Bool("version", false, "Print version information and exit.")
+var words = flag.Int("words", 20, "The number of words to test with.")
+var wordFile = flag.String("wordfile", "words.txt", "The path to the file of newline-separated words to use.\nThis can be an absolute or relative path.\nIf it is invalid it will be treated as a relative path from the data directory.")
 
 func main() {
 
