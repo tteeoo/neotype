@@ -47,7 +47,7 @@ func main() {
 	dictionary := strings.Split(string(dictionaryB), "\n")
 	var fixedDictionary []string
 	for _, v := range dictionary {
-		if v != "" && v != "\t" {
+		if v != "" {
 			fixedDictionary = append(fixedDictionary, v)
 		}
 	}
@@ -59,7 +59,7 @@ func main() {
 
 	// Declare Game
 	g := game.Game{
-		WordString: strings.Join(chosen, " "),
+		WordString: strings.ReplaceAll(strings.Join(chosen, " "), "\t", "    "),
 		Width:      w,
 		Height:     h,
 	}

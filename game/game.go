@@ -19,6 +19,7 @@ type Game struct {
 
 	Lines []string
 	Page  int
+	Tab   int
 
 	Line       int
 	Index      int
@@ -65,13 +66,15 @@ func (g *Game) Start() error {
 	var b []byte = make([]byte, 1)
 	for {
 		// Read character
-		_, err := os.Stdin.Read(b)
-		if err != nil {
-			err2 := exec.Command("stty", "-F", "/dev/tty", "echo").Run()
-			if err2 != nil {
-				return fmt.Errorf("Cannot run command \"stty -F /dev/tty echo\": %s", err)
+		if g.Tab == 0 {
+			_, err := os.Stdin.Read(b)
+			if err != nil {
+				err2 := exec.Command("stty", "-F", "/dev/tty", "echo").Run()
+				if err2 != nil {
+					return fmt.Errorf("Cannot run command \"stty -F /dev/tty echo\": %s", err)
+				}
+				return fmt.Errorf("Cannot read from standard input")
 			}
-			return fmt.Errorf("Cannot read from standard input")
 		}
 		g.TotalTyped++
 
@@ -89,25 +92,28 @@ func (g *Game) Start() error {
 		}
 
 		// Correct character
-		if string(b) == string(g.WordString[g.Index]) {
+		if g.Tab == 0 {
+			if string(b) == string(g.WordString[g.Index]) {
+				fmt.Print("\033[1C")
+				g.Index++
+			} else if string(b) == "\t" && g.Index+3 < len(g.WordString) && g.WordString[g.Index:g.Index+4] == "    " {
+				g.Tab = 4
+			} else {
+				// Incorrect
+				g.TotalWrong++
+			}
+		} else {
+			g.Tab--
 			fmt.Print("\033[1C")
 			g.Index++
-		} else {
-			// Incorrect
-			g.TotalWrong++
 		}
 
 		// Line break
 		if g.Index == g.Width*g.Line {
 			g.Line++
 			if scrollMode {
-				if g.Page == 1 && g.Line == g.Page*g.Height+1 {
-					g.Page++
-					fmt.Print("\033[H\033[2J")
-					fmt.Print(g.NewPrintBuffer())
-					fmt.Printf("\033[%dA", int(len(g.WordString)/g.Width)+1)
-					fmt.Printf("\033[%dD", g.Width)
-				} else if g.Page != 1 && g.Line == g.Page*g.Height-1 {
+				if (g.Page == 1 && g.Line == g.Page*g.Height+1) ||
+					(g.Page != 1 && g.Line == g.Page*g.Height-1) {
 					g.Page++
 					fmt.Print("\033[H\033[2J")
 					fmt.Print(g.NewPrintBuffer())
