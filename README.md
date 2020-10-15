@@ -26,6 +26,7 @@ Just run `neotype` to start.
 
 Options:
 * `-wordfile <string>`: The path to the file of newline-separated words to use. This can be an absolute or relative path, if it is invalid it will be treated as a relative path from the data directory (default "words.txt").
+* `-textfile <string>`: The path to a file containing exactly what to type. The path works the same as wordfile (overrides wordfile).
 * `-words <int>`: The number of words to test with (default 20).
 
 NeoType looks for the data directory at following paths, using the first valid path:
